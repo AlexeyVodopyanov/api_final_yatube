@@ -15,8 +15,12 @@ router.register(r'groups', GroupViewSet, basename='group')
 
 urlpatterns = [
     path('v1/', include(router.urls)),
-    path('v1/jwt/create/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('v1/jwt/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('v1/jwt/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    path('v1/api-token-auth/', obtain_auth_token, name='api_token_auth'),
+    path('v1/jwt/create/', TokenObtainPairView.as_view(),
+         name='token_obtain_pair'),
+    path('v1/jwt/refresh/', TokenRefreshView.as_view(),
+         name='token_refresh'),
+    path('v1/jwt/verify/', TokenVerifyView.as_view(),
+         name='token_verify'),
+    path('v1/api-token-auth/', obtain_auth_token,
+         name='api_token_auth'),
 ]
