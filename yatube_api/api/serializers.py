@@ -43,7 +43,8 @@ class FollowSerializer(serializers.ModelSerializer):
         if user == following:
             raise serializers.ValidationError("You cannot follow yourself.")
         if Follow.objects.filter(user=user, following=following).exists():
-            raise serializers.ValidationError("You are already following this user.")
+            raise serializers.ValidationError("You are already "
+                                              "following this user.")
         return attrs
 
 
