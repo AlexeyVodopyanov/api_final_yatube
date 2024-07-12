@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from rest_framework import filters, viewsets
-from rest_framework.exceptions import ValidationError
+from rest_framework import filters, mixins, viewsets
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
@@ -42,7 +41,8 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.save()
 
 
-class FollowViewSet(viewsets.ModelViewSet):
+class FollowViewSet(mixins.ListModelMixin, mixins.CreateModelMixin,
+                    viewsets.GenericViewSet):
     serializer_class = FollowSerializer
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
@@ -53,11 +53,6 @@ class FollowViewSet(viewsets.ModelViewSet):
         return Follow.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        following = serializer.validated_data['following']
-        if self.request.user == following:
-            raise ValidationError("You cannot follow yourself.")
-        if self.get_queryset().filter(following=following).exists():
-            raise ValidationError("You are already following this user.")
         serializer.save(user=self.request.user)
 
 

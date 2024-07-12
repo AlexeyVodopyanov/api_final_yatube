@@ -36,6 +36,16 @@ class FollowSerializer(serializers.ModelSerializer):
         model = Follow
         fields = ['user', 'following']
 
+    def validate(self, attrs):
+        user = self.context['request'].user
+        following = attrs.get('following')
+
+        if user == following:
+            raise serializers.ValidationError("You cannot follow yourself.")
+        if Follow.objects.filter(user=user, following=following).exists():
+            raise serializers.ValidationError("You are already following this user.")
+        return attrs
+
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
